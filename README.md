@@ -23,37 +23,45 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 
 ## Perguntas mais frequentes "FAQ"
 
-### Plataforma Magento1
-
-    cd ~/dados/public_html
-
-### Plataforma Magento2
-
 #### Build
 
-    cd /home/marcio/dados/git/projects/docker-php
+    cd ~/dados/git/projects/docker-php
 
     docker-compose up
 
-#### Local Magento
+#### Install Magento
 
-    cd /home/marcio/dados/git/projects/docker-php
+    cd ~/dados/git/projects/docker-php
 
     ./shell root
+    chown -R www-data $HOME/.composer
+    exit
+
+    ./shell
     ls
     mkdir magento
     cd magento
     install-magento
+    exit
 
-#### Local Magento2
+#### Install Magento2
 
-    cd /home/marcio/dados/git/projects/docker-php
+    cd ~/dados/git/projects/docker-php
 
     ./shell
     ls
     mkdir magento2
     cd magento2
     install-magento2
+    exit
+
+### Plataforma Magento1
+
+    cd ~/dados/public_html
+
+### Plataforma Magento2
+
+
 
 #### Pull & Install
 
