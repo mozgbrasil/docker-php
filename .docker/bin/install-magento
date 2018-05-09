@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+# Sample Data
+
+echo $(date '+%d/%m/%Y %H:%M:%S')
+mysqladmin -u root -p root DROP "magento-dev"
+mysqladmin -u root -p root CREATE "magento-dev";
+mysql -h 'localhost' -u 'root' -p 'magento-dev' < 'magento-sample-data-1.9.2.4/magento_sample_data_for_1.9.2.4.sql'
+echo $(date '+%d/%m/%Y %H:%M:%S')
+
+# Project
+
+cat > composer.json <<- _EOF_
+{
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": [
+        "proprietary"
+    ],
+    "repositories":[
+        {
+            "type": "vcs",
+            "url":  "git@bitbucket.org:mozgbrasil/magento-telencephalon.git"
+        },
+        {
+            "type": "vcs",
+            "url":  "git@bitbucket.org:team_mozg/magento-theme-porto.git"
+        },
+        {
+            "type":"composer",
+            "url":"https://packages.firegento.com"
+        }
+    ],
+    "extra":{
+        "magento-root-dir": "magento",
+        "magento-deploystrategy": "symlink",
+        "magento-force": true
+    },
+    "require": {
+        "magento-hackathon/magento-composer-installer": "~3.0",
+        "aydin-hassan/magento-core-composer-installer": "~1.2",
+        "firegento/magento": "~1.9.3.1",
+        "husseycoding/customordergrid": "*",
+        "connect20/Clarion_Customerattribute": "^1.0",
+        "aoepeople/aoe_scheduler": "^1.5",
+        "aschroder/smtp_pro": "^2.0.7",
+        "mozgbrasil/magento-telencephalon-COMPILE_SUFIX": "dev-master",
+        "mozgbrasil/magento-bundle-php_56": "dev-master",
+        "mozgbrasil/magento-squidfacil-php_56": "dev-master",
+        "mozgbrasil/magento-theme-porto": "dev-master"
+    }
+}
+_EOF_
+
+# FIX: var/www/.composer/cache/vcs does not exist and could not be created
+
+composer update
+
+
+#
+
+php -f install.php -- \
+--license_agreement_accepted "yes" \
+--locale "pt_BR" \
+--timezone "America/Sao_Paulo" \
+--default_currency "BRL" \
+--db_host "localhost" \
+--db_name "magento-dev" \
+--db_user "root" \
+--db_pass "root" \
+--url "http://localhost/magento/magento/" \
+--skip_url_validation "yes" \
+--use_rewrites "yes" \
+--use_secure "no" \
+--secure_base_url "" \
+--use_secure_admin "no" \
+--admin_firstname "Magento" \
+--admin_lastname "User" \
+--admin_email "mailer@mozg.com.br" \
+--admin_username "admin" \
+--admin_password "123456a"
+
+php index.php
+
+php shell/compiler.php --state
+
+php shell/log.php --clean
+
+php shell/indexer.php --status
+
+php shell/indexer.php --info
+
+php shell/indexer.php --reindexall
+
+./mage
+
+./mage mage-setup
+
+./mage sync
+
+./mage list-installed
+
+./mage list-upgrades
+
+clear && echo "
+===================== 🚀 Done 🚀 ===================
+
+      Magento Installed successfully!
+
+      🌎 Admin: http://localhost/magento/admin
+      👤 User: admin
+      🔑 Password: 123456a
+
+===================== 🚀 Done 🚀 ==================="

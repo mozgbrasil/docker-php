@@ -6,6 +6,10 @@ ENV XDEBUG_PORT 9000
 
 # Construct
 
+RUN echo $USER
+
+RUN printenv
+
 RUN pwd && ls -lah && apt-get update && apt-get install -y apt-utils wget
 
 # Require

@@ -1,0 +1,12 @@
+XDEBUG_CONFIG: "remote_host=localhost"
+PHP_IDE_CONFIG: "serverName=Docker"
+
+MYSQL_HOST=db
+MYSQL_ROOT_PASSWORD=root
+MYSQL_DATABASE=magento
+MYSQL_USER=magento
+MYSQL_PASSWORD=magento
+
+PMA_HOST=db
+PMA_USER=root
+PMA_PASSWORD=root

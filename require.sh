@@ -2,13 +2,17 @@
 
 # Install System Dependencies
 
-ls && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common python-software-properties && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y libfreetype6-dev libicu-dev libssl-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev libedit-dev libedit2 libxslt1-dev redis-tools mysql-client git vim nano curl lynx psmisc unzip tar cron bash-completion && apt-get clean
+printenv
+
+echo $USER
+
+ls && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common python-software-properties && DEBIAN_FRONTEND=noninteractive apt-get install -y libfreetype6-dev libicu-dev libssl-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev libedit-dev libedit2 libxslt1-dev redis-tools mysql-client git vim nano curl lynx psmisc unzip tar cron bash-completion && apt-get clean
 
 # Install Magento Dependencies
 
-docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; 
+docker-php-ext-install opcache gd bcmath intl mbstring mcrypt pdo_mysql soap xsl zip sockets
 
-docker-php-ext-install opcache gd bcmath intl mbstring mcrypt pdo_mysql soap xsl zip
+docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/;
 
 # Install oAuth
 
@@ -21,6 +25,13 @@ curl -sL https://deb.nodesource.com/setup_6.x | bash - && apt-get install -y nod
 # Install Composer
 
 curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin/ --filename=composer
+
+## FIX: [RuntimeException] /home/???/.composer/cache/vcs does not exist and could not be created.
+## Cannot create cache directory /home/???/.composer/cache/repo/https---packagist.org/, or directory is not writable. Proceeding without cache
+##  [RuntimeException] Can not clone git@bitbucket.org:???/???.git to access package information. The "/home/???/.composer/cache/vcs" directory is not writable by the current user.
+## FIX: https://github.com/thomaszbz/native-dockerfiles-typo3/issues/19
+
+####chown -R $USER $HOME/.composer
 
 composer global require hirak/prestissimo
 
@@ -42,28 +53,4 @@ curl -fsSL 'http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x
 
 #
 
-# Debug
 
-ARRAY=([0]="05/07/2017 12:16:22" [1]=$1 [2]=`pwd` [3]=`ls` [4]=`printenv` )
-ARRAY=([0]="$(date +%Y-%m-%d_%H-%M-%S)"  [1]=$1 [2]=`pwd` [3]=`ls` [4]=`whoami` [5]=`printenv` )
-RETURN=""
-
-#echo "Array size: ${#ARRAY[*]}"
-
-#echo "Array items and indexes:"
-for index in ${!ARRAY[*]}
-do
-    #RETURN="${RETURN}\n"
-    RETURN="${RETURN}${index}:
-${ARRAY[$index]}
-
-"
-    #RETURN="${RETURN}\n"
-done
-
-#echo -e $RETURN
-echo $RETURN
-
-#curl --request POST "https://fleep.io/hook/OLuIRi0JRt2yv5OQisX6tg" --data "${RETURN}"
-
-#
