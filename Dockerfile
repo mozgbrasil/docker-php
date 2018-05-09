@@ -4,9 +4,9 @@ LABEL Marcio dos Santos Amorim <suporte@mozg.com.br>
 
 ENV XDEBUG_PORT 9000
 
-# Base
+# Construct
 
-RUN pwd && ls -lah && apt-get update && apt-get install -y wget
+RUN pwd && ls -lah && apt-get update && apt-get install -y apt-utils wget
 
 # Require
 
