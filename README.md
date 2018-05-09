@@ -27,7 +27,7 @@ Install [Docker](https://docs.docker.com/engine/installation/linux/docker-ce/ubu
 
     cd ~/dados/git/projects/docker-php
 
-    docker-compose up
+    docker-compose up -d
 
 #### Install Magento
 
